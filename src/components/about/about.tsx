@@ -51,7 +51,7 @@ export function About() {
 
             {/* Image */}
             <Image
-              src="/images/me-working.png"
+              src="/images/profile-working.png"
               alt="Meiyarasan working on a laptop"
               fill
               priority={false}
