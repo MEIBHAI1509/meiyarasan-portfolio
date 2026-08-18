@@ -17,10 +17,14 @@ export function SmoothScroll({
       smoothWheel: true,
       touchMultiplier: 1.5,
 
-      // Don't let Lenis take control of elements
-      // explicitly marked as native scroll containers.
+      // Important:
+      // allow native scrolling inside elements
+      // that explicitly opt into it.
       prevent: (node) => {
         return (
+          node.hasAttribute(
+            "data-lenis-prevent",
+          ) ||
           node.closest(
             "[data-lenis-prevent]",
           ) !== null
@@ -34,7 +38,6 @@ export function SmoothScroll({
 
     const raf = (time: number) => {
       lenis.raf(time);
-
       animationFrameId =
         requestAnimationFrame(raf);
     };

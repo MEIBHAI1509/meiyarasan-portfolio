@@ -187,10 +187,10 @@ export const projects: Project[] = [
   {
     id: "tournament-challenge-platform",
 
-    title: "Tournament & Challenge Platform",
+    title: "Confidential Tournament & Challenge Platform",
 
     shortDescription:
-      "A production-grade tournament and challenge platform featuring tournament brackets, team tournaments, challenges, casual games, and leaderboard experiences.",
+      "A production-grade tournament and challenge platform featuring brackets, team tournaments, challenges, casual games, and leaderboard experiences, developed as part of professional client work.",
 
     description:
       "Professional work completed during my time as an Associate Software Developer at Aretedge Innovations Private Limited. I worked on production-grade web applications using React.js and Next.js, building responsive frontend experiences for tournaments, challenges, casual games, and leaderboard systems. I developed reusable UI architecture, integrated GraphQL and REST APIs, optimized frontend performance, and contributed to white-label implementations with customized branding and functionality for multiple clients.",

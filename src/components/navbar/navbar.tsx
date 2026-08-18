@@ -52,10 +52,18 @@ const trackedSectionIds = [
 ];
 
 export function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] =
+    useState(false);
+
+  const [scrolled, setScrolled] =
+    useState(false);
+
   const activeSection =
     useActiveSection(trackedSectionIds);
+
+  /* ==========================================================
+     Header scroll state
+  ========================================================== */
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,6 +85,10 @@ export function Navbar() {
       );
     };
   }, []);
+
+  /* ==========================================================
+     Escape key
+  ========================================================== */
 
   useEffect(() => {
     if (!mobileOpen) {
@@ -104,6 +116,46 @@ export function Navbar() {
     };
   }, [mobileOpen]);
 
+  /* ==========================================================
+     Lock background scrolling when mobile menu is open
+  ========================================================== */
+
+  useEffect(() => {
+    if (!mobileOpen) {
+      return;
+    }
+
+    const body = document.body;
+    const html = document.documentElement;
+
+    const previousBodyOverflow =
+      body.style.overflow;
+
+    const previousHtmlOverflow =
+      html.style.overflow;
+
+    // Stop Lenis from scrolling the page
+    // while the mobile menu is open.
+    window.__lenis?.stop();
+
+    body.style.overflow = "hidden";
+    html.style.overflow = "hidden";
+
+    return () => {
+      body.style.overflow =
+        previousBodyOverflow;
+
+      html.style.overflow =
+        previousHtmlOverflow;
+
+      window.__lenis?.start();
+    };
+  }, [mobileOpen]);
+
+  /* ==========================================================
+     Navigation
+  ========================================================== */
+
   const handleNavigation = (id: string) => {
     setMobileOpen(false);
 
@@ -114,19 +166,30 @@ export function Navbar() {
 
   return (
     <>
+      {/* ====================================================== */}
+      {/* Header */}
+      {/* ====================================================== */}
+
       <header
-        className={`fixed left-0 right-0 top-0 z-50 transition-all duration-500 ${scrolled
-          ? "border-b border-white/[0.06] bg-zinc-950/80 backdrop-blur-xl"
-          : "bg-transparent"
-          }`}
+        className={`fixed left-0 right-0 top-0 z-50 transition-all duration-500 ${
+          scrolled
+            ? "border-b border-white/[0.06] bg-zinc-950/80 backdrop-blur-xl"
+            : "bg-transparent"
+        }`}
       >
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
+          {/* ================================================== */}
           {/* Logo */}
+          {/* ================================================== */}
+
           <button
             type="button"
             onClick={() => {
               setMobileOpen(false);
-              scrollToSection("hero");
+
+              requestAnimationFrame(() => {
+                scrollToSection("hero");
+              });
             }}
             className="group flex items-center gap-3"
             aria-label="Go to homepage"
@@ -144,33 +207,46 @@ export function Navbar() {
             </span>
           </button>
 
+          {/* ================================================== */}
           {/* Desktop Navigation */}
-          <nav className="hidden items-center gap-7 lg:flex">
-            {navigationItems.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() =>
-                  handleNavigation(item.id)
-                }
-                className={`group relative text-xs font-medium transition-colors duration-300 ${activeSection === item.id
-                  ? "text-white"
-                  : "text-zinc-500 hover:text-white"
-                  }`}
-              >
-                {item.label}
+          {/* ================================================== */}
 
-                <span
-                  className={`absolute -bottom-2 left-0 h-px bg-primary-light transition-all duration-300 ${activeSection === item.id
-                    ? "w-full"
-                    : "w-0 group-hover:w-full"
+          <nav
+            className="hidden items-center gap-7 lg:flex"
+            aria-label="Primary navigation"
+          >
+            {navigationItems.map(
+              (item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() =>
+                    handleNavigation(item.id)
+                  }
+                  className={`group relative text-xs font-medium transition-colors duration-300 ${
+                    activeSection === item.id
+                      ? "text-white"
+                      : "text-zinc-500 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+
+                  <span
+                    className={`absolute -bottom-2 left-0 h-px bg-primary-light transition-all duration-300 ${
+                      activeSection === item.id
+                        ? "w-full"
+                        : "w-0 group-hover:w-full"
                     }`}
-                />
-              </button>
-            ))}
+                  />
+                </button>
+              ),
+            )}
           </nav>
 
+          {/* ================================================== */}
           {/* Desktop CTA */}
+          {/* ================================================== */}
+
           <div className="hidden lg:block">
             <button
               type="button"
@@ -188,74 +264,123 @@ export function Navbar() {
             </button>
           </div>
 
+          {/* ================================================== */}
           {/* Mobile Menu Button */}
+          {/* ================================================== */}
+
           <button
             type="button"
             onClick={() =>
-              setMobileOpen((current) => !current)
+              setMobileOpen(
+                (current) => !current,
+              )
             }
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-zinc-300 transition-colors hover:bg-white/[0.08] lg:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-zinc-300 transition-all duration-300 hover:border-white/20 hover:bg-white/[0.08] lg:hidden"
             aria-label={
               mobileOpen
                 ? "Close navigation menu"
                 : "Open navigation menu"
             }
             aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
           >
-            {mobileOpen ? (
-              <X size={19} />
-            ) : (
-              <Menu size={19} />
-            )}
+            <span className="relative flex h-5 w-5 items-center justify-center">
+              <Menu
+                size={19}
+                className={`absolute transition-all duration-300 ${
+                  mobileOpen
+                    ? "rotate-90 scale-0 opacity-0"
+                    : "rotate-0 scale-100 opacity-100"
+                }`}
+              />
+
+              <X
+                size={19}
+                className={`absolute transition-all duration-300 ${
+                  mobileOpen
+                    ? "rotate-0 scale-100 opacity-100"
+                    : "-rotate-90 scale-0 opacity-0"
+                }`}
+              />
+            </span>
           </button>
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* ====================================================== */}
+      {/* Mobile Navigation */}
+      {/* ====================================================== */}
+
       <div
-        className={`fixed inset-0 z-40 lg:hidden ${mobileOpen
-          ? "pointer-events-auto"
-          : "pointer-events-none"
-          }`}
+        id="mobile-navigation"
+        className={`fixed inset-0 z-40 lg:hidden ${
+          mobileOpen
+            ? "pointer-events-auto"
+            : "pointer-events-none"
+        }`}
+        aria-hidden={!mobileOpen}
       >
+        {/* ==================================================== */}
         {/* Backdrop */}
+        {/* ==================================================== */}
+
         <button
           type="button"
           aria-label="Close navigation menu"
-          onClick={() => setMobileOpen(false)}
-          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${mobileOpen
-            ? "opacity-100"
-            : "opacity-0"
-            }`}
+          onClick={() =>
+            setMobileOpen(false)
+          }
+          tabIndex={mobileOpen ? 0 : -1}
+          className={`absolute inset-0 bg-black/65 backdrop-blur-sm transition-opacity duration-300 ${
+            mobileOpen
+              ? "opacity-100"
+              : "opacity-0"
+          }`}
         />
 
-        {/* Menu panel */}
+        {/* ==================================================== */}
+        {/* Menu Panel */}
+        {/* ==================================================== */}
+
         <div
-          className={`absolute left-3 right-3 top-23 overflow-hidden rounded-3xl border border-white/10 bg-zinc-950/95 shadow-2xl shadow-black/50 backdrop-blur-xl transition-all duration-300 ${mobileOpen
-            ? "translate-y-0 opacity-100"
-            : "-translate-y-4 opacity-0"
-            }`}
+          className={`absolute left-3 right-3 top-[5.5rem] max-h-[calc(100dvh-6.5rem)] overflow-y-auto overscroll-contain rounded-3xl border border-white/10 bg-zinc-950/95 shadow-2xl shadow-black/50 backdrop-blur-xl transition-all duration-300 ${
+            mobileOpen
+              ? "translate-y-0 opacity-100"
+              : "-translate-y-4 opacity-0"
+          }`}
         >
-          <nav className="p-3">
+          <nav
+            className="p-3"
+            aria-label="Mobile navigation"
+          >
             {navigationItems.map(
               (item) => (
                 <button
                   key={item.id}
                   type="button"
                   onClick={() =>
-                    handleNavigation(item.id)
+                    handleNavigation(
+                      item.id,
+                    )
                   }
-                  className={`group flex w-full items-center justify-between rounded-2xl px-4 py-4 text-left transition-colors ${activeSection === item.id
-                    ? "bg-white/[0.06]"
-                    : "hover:bg-white/[0.05]"
-                    }`}
+                  tabIndex={
+                    mobileOpen ? 0 : -1
+                  }
+                  className={`group flex w-full items-center justify-between rounded-2xl px-4 py-4 text-left transition-all duration-300 ${
+                    activeSection ===
+                    item.id
+                      ? "bg-white/[0.06]"
+                      : "hover:bg-white/[0.05]"
+                  }`}
                 >
                   <span>
                     <span
-                      className={`block text-sm font-medium ${activeSection === item.id
-                        ? "text-white"
-                        : "text-zinc-200"
-                        }`}
+                      className={`block text-sm font-medium ${
+                        activeSection ===
+                        item.id
+                          ? "text-white"
+                          : "text-zinc-200"
+                      }`}
                     >
                       {item.label}
                     </span>
@@ -269,21 +394,32 @@ export function Navbar() {
 
                   <ArrowUpRight
                     size={16}
-                    className={`transition-all duration-300 ${activeSection === item.id
+                    className={`transition-all duration-300 ${
+                      activeSection ===
+                      item.id
                         ? "text-primary-light"
                         : "text-zinc-700 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary-light"
-                      }`}
+                    }`}
                   />
                 </button>
               ),
             )}
+
+            {/* ================================================= */}
+            {/* Mobile CTA */}
+            {/* ================================================= */}
 
             <div className="mt-2 border-t border-white/[0.06] p-2">
               <Magnetic>
                 <button
                   type="button"
                   onClick={() =>
-                    handleNavigation("contact")
+                    handleNavigation(
+                      "contact",
+                    )
+                  }
+                  tabIndex={
+                    mobileOpen ? 0 : -1
                   }
                   className="group inline-flex h-10 items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 text-xs font-medium text-white transition-all duration-300 hover:border-white/20 hover:bg-white/[0.08]"
                 >
@@ -303,7 +439,13 @@ export function Navbar() {
   );
 }
 
-function getNavigationDescription(id: string) {
+/* ============================================================ */
+/* Navigation descriptions */
+/* ============================================================ */
+
+function getNavigationDescription(
+  id: string,
+) {
   switch (id) {
     case "about":
       return "A little about me";

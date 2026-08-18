@@ -16,11 +16,16 @@ export function getBlogPosts(): BlogPost[] {
 
   const files = fs
     .readdirSync(BLOG_DIRECTORY)
-    .filter((file) => file.endsWith(".mdx"));
+    .filter((file) =>
+      file.endsWith(".mdx"),
+    );
 
   return files
     .map((file) => {
-      const slug = file.replace(/\.mdx$/, "");
+      const slug = file.replace(
+        /\.mdx$/,
+        "",
+      );
 
       const filePath = path.join(
         BLOG_DIRECTORY,
@@ -32,14 +37,18 @@ export function getBlogPosts(): BlogPost[] {
         "utf8",
       );
 
-      const { data } = matter(source);
+      const { data } =
+        matter(source);
 
       return {
         slug,
         title: data.title ?? slug,
-        description: data.description ?? "",
+        description:
+          data.description ?? "",
         date: data.date ?? "",
-        tags: data.tags ?? [],
+        tags: Array.isArray(data.tags)
+          ? data.tags
+          : [],
       };
     })
     .sort(

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
@@ -7,22 +9,23 @@ interface BlogCardProps {
   post: BlogPost;
 }
 
-export function BlogCard({ post }: BlogCardProps) {
+export function BlogCard({
+  post,
+}: BlogCardProps) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group block rounded-3xl border border-white/[0.08] bg-white/[0.025] p-6 transition-all duration-500 hover:-translate-y-1 hover:border-white/[0.15] hover:bg-white/[0.04]"
+      className="group flex h-full flex-col rounded-3xl border border-white/[0.08] bg-white/[0.025] p-6 transition-all duration-500 hover:-translate-y-1 hover:border-white/[0.15] hover:bg-white/[0.04]"
     >
       <div className="flex items-center justify-between">
         <span className="text-xs text-zinc-600">
-          {new Date(post.date).toLocaleDateString(
-            "en-US",
-            {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            },
-          )}
+          {new Date(
+            post.date,
+          ).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })}
         </span>
 
         <ArrowUpRight
@@ -35,11 +38,11 @@ export function BlogCard({ post }: BlogCardProps) {
         {post.title}
       </h3>
 
-      <p className="mt-3 text-sm leading-6 text-zinc-500">
+      <p className="mt-3 line-clamp-3 text-sm leading-6 text-zinc-500">
         {post.description}
       </p>
 
-      <div className="mt-5 flex flex-wrap gap-2">
+      <div className="mt-auto flex flex-wrap gap-2 pt-6">
         {post.tags.map((tag) => (
           <span
             key={tag}

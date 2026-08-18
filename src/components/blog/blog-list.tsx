@@ -8,7 +8,10 @@ export function BlogList() {
   const posts = getBlogPosts();
 
   return (
-    <Section id="blog" className="overflow-hidden">
+    <Section
+      id="blog"
+      className="overflow-hidden"
+    >
       <div className="max-w-3xl">
         <Reveal>
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-primary-light">
@@ -27,18 +30,20 @@ export function BlogList() {
 
         <Reveal delay={0.2}>
           <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-400">
-            Notes about development, projects, things I&apos;ve
-            learned, and problems I&apos;ve solved.
+            Notes about development, projects,
+            things I&apos;ve learned, and problems
+            I&apos;ve solved.
           </p>
         </Reveal>
       </div>
 
       {posts.length > 0 ? (
-        <div className="mt-14 grid gap-4 md:grid-cols-2">
+        <div className="mt-14 grid items-stretch gap-4 md:grid-cols-2">
           {posts.map((post, index) => (
             <Reveal
               key={post.slug}
               delay={index * 0.1}
+              className="h-full"
             >
               <BlogCard post={post} />
             </Reveal>

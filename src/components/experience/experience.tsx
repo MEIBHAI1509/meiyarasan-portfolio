@@ -48,7 +48,7 @@ export function Experience() {
       {/* Timeline */}
       <div className="relative mx-auto mt-16 max-w-5xl">
         {/* Timeline line */}
-        <div className="absolute bottom-0 left-6 top-0 hidden w-px bg-gradient-to-b from-primary/30 via-white/[0.08] to-transparent md:block" />
+        <div className="absolute bottom-0 left-3 top-0 w-px bg-gradient-to-b from-primary/30 via-white/[0.08] to-transparent md:left-6" />
 
         <div className="space-y-10 md:space-y-14">
           {experiences.map((experience, index) => (
@@ -56,9 +56,9 @@ export function Experience() {
               key={experience.id}
               delay={0.1 + index * 0.12}
             >
-              <article className="relative md:pl-16">
+              <article className="relative pl-8 md:pl-16">
                 {/* Timeline dot */}
-                <div className="absolute left-[17px] top-8 hidden h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full border border-primary/30 bg-zinc-950 md:flex">
+                <div className="absolute left-3 top-8 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full border border-primary/30 bg-zinc-950 md:left-[17px]">
                   <div className="h-1.5 w-1.5 rounded-full bg-primary-light" />
                 </div>
 
