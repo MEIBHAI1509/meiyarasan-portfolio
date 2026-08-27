@@ -82,11 +82,12 @@ export function About() {
           </div>
 
           {/* Floating status */}
-          <div className="absolute -bottom-5 -right-2 rounded-2xl border border-white/10 bg-zinc-950/90 px-4 py-3 shadow-2xl backdrop-blur-xl sm:-right-5">
+          {/* Floating status */}
+          <div className="absolute -bottom-4 right-4 z-30 rounded-2xl border border-white/10 bg-zinc-950/90 px-4 py-3 shadow-2xl backdrop-blur-xl">
             <div className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400" />
+              <span className="h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-green-400" />
 
-              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">
+              <p className="whitespace-nowrap text-[10px] uppercase tracking-[0.15em] text-zinc-400">
                 Open to opportunities
               </p>
             </div>
